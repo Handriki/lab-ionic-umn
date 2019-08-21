@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+        <script src="https://unpkg.com/@ionic/core@latest/dist/ionic.js"></script>
+        <link href="https://unpkg.com/@ionic/core@latest/css/ionic.bundle.css" rel="stylesheet">
+        <title>Budget Planner</title>
+    </head>
+    <body>
+        <ion-header>
+        <ion-toolbar color="primary">
+            <ion-buttons slot="primary">
+                <ion-back-button></ion-back-button>
+            </ion-buttons>
+            <ion-title class="ion-text-center">Budget Planner</ion-title>
+        </ion-toolbar>
+        </ion-header>
+    
+        <ion-content>
+            <ion-card>
+                <ion-card-header>
+                    <ion-card-title>Input Pengeluaran</ion-card-title>
+                </ion-card-header>
+                <ion-card-content>
+                    <form id="myForm" onsubmit="tambahForm(event)">
+                        <ion-item>
+                            <ion-input type="text" placeholder="Nama Pengeluaran" oninput="handleNamaValue(event)"></ion-input>
+                        </ion-item>
+                        <ion-item>
+                            <ion-input type="number" placeholder="Jumlah Pengeluaran" oninput="handleJumlahValue(event)"></ion-input>
+                        </ion-item>
+                        <ion-grid>
+                            <ion-row>
+                                <ion-col></ion-col>
+                                <ion-col>
+                                    <ion-button onclick="reset(event)" size="default" fill="outline" color="danger">x Hapus</ion-button>
+                                </ion-col>
+                                <ion-col>
+                                    <ion-button type="submit" size="default" color="primary">+ Tambah</ion-button>
+                                </ion-col>
+                            </ion-row>
+                        </ion-grid>
+                    </form>
+                </ion-card-content>
+            </ion-card>
+            <ion-list id="pengeluaran_list">
+
+            </ion-list>
+            <div margin-horizontal="10">
+                <ion-label id="total_pengeluaran">Total Pengeluaran : Rp. 0,00</ion-label>                
+            </div>
+        </ion-content>
+        <ion-alert-controller></ion-alert-controller>
+        <script>
+            const controller = document.querySelector('ion-alert-controller');
+            var pengeluaran = [];
+            let nama, jumlah;
+
+            function reset(event){
+                document.getElementById("myForm").reset();
+            }
+
+            function tambahForm(event) {
+                event.preventDefault();
+                if(nama == "" || jumlah == "" || nama == null || jumlah == null){
+                    controller.create({
+                        header: 'Terjadi kesalahan',
+                        message: `Mohon masukkan nama dan jumlah pengeluaran.`,
+                        buttons: [{
+                        text: 'Tutup'
+                        }]
+                    }).then(alert => alert.present());
+                }
+                else{
+                    pengeluaran.push([nama,jumlah]);
+                    document.getElementById("pengeluaran_list").innerHTML += "<ion-item><ion-label>" + nama + " : Rp. " + jumlah + ",00</ion-label><ion-item>";
+                    var total = 0;
+                    for(var arrayIndex in pengeluaran) {
+                        total += parseInt(pengeluaran[arrayIndex][1]);
+                    }
+                    document.getElementById("total_pengeluaran").innerHTML = "Total Pengeluaran : Rp. " + total + ",00"; 
+                    document.getElementById("myForm").reset();
+                    nama = jumlah = "";
+                }
+            }
+
+            function handleNamaValue(event) {
+                nama = event.target.value;
+            }
+            function handleJumlahValue(event) {
+                jumlah = event.target.value;
+            }
+        </script>
+    </body>
+</html>

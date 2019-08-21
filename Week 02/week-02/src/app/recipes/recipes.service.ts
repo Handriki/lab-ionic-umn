@@ -40,6 +40,13 @@ export class RecipesService {
   }
 
   deleteRecipe(recipeId: string){
-
+    console.log("Start");
+        
+    const recipeArr = this.recipes.findIndex(recipe => {
+        return (recipeId === recipe.id);
+    });
+    if (-1 != recipeArr) {
+        this.recipes.splice(recipeArr, 1);
+    }    
   }
 }
